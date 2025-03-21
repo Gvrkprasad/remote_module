@@ -1,11 +1,11 @@
 module "vpc" {
-  source      = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/vpc/"
+  source      = "git::https://github.com/Gvrkprasad/remote_module.git//modules/vpc/"
   environment = lookup(var.environment, terraform.workspace)
   cidr_block  = lookup(var.cidr_block, terraform.workspace)
 }
 
 module "security" {
-  source              = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/security/"
+  source              = "git::https://github.com/Gvrkprasad/remote_module.git//modules/security/"
   environment         = lookup(var.environment, terraform.workspace)
   vpc_id              = module.vpc.vpc_id
   public_subnet_cidr  = module.vpc.public_subnet_cidr
@@ -14,12 +14,12 @@ module "security" {
 }
 
 module "cloudwatch" {
-  source      = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/cloudwatch/"
+  source      = "git::https://github.com/Gvrkprasad/remote_module.git//modules/cloudwatch"
   environment = lookup(var.environment, terraform.workspace)
 }
 
 module "compute" {
-  source             = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/compute/"
+  source             = "git::https://github.com/Gvrkprasad/remote_module.git//modules/compute/"
   environment        = lookup(var.environment, terraform.workspace)
   web_ami_id         = var.web_ami_id
   app_ami_id         = var.app_ami_id
@@ -34,7 +34,7 @@ module "compute" {
 }
 
 module "loadbalancer" {
-  source             = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/loadbalancer/"
+  source             = "git::https://github.com/Gvrkprasad/remote_module.git//modules/loadbalancer/"
   environment        = lookup(var.environment, terraform.workspace)
   public_subnet_ids  = module.vpc.public_subnet_ids
   private_subnet_ids = module.vpc.private_subnet_ids
@@ -44,7 +44,7 @@ module "loadbalancer" {
 }
 
 module "database" {
-  source              = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/database/"
+  source              = "git::https://github.com/Gvrkprasad/remote_module.git//modules/database/"
   environment         = lookup(var.environment, terraform.workspace)
   database_subnet_ids = module.vpc.database_subnet_ids
   db_sg_id            = module.security.db_sg_id
@@ -53,7 +53,7 @@ module "database" {
 }
 
 module "ec2" {
-  source            = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/ec2/"
+  source            = "git::https://github.com/Gvrkprasad/remote_module.git//modules/ec2/"
   ec2_ami           = lookup(var.ec2_ami, terraform.workspace)
   ec2_instance_type = lookup(var.ec2_instance_type, terraform.workspace)
   ec2_keypair       = lookup(var.ec2_keypair, terraform.workspace)
@@ -64,21 +64,21 @@ module "ec2" {
 }
 
 module "iam_users" {
-  source          = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/iam_users/"
+  source          = "git::https://github.com/Gvrkprasad/remote_module.git//modules/iam_users/"
   iam_user1       = lookup(var.iam_user1, terraform.workspace)
   environment     = lookup(var.environment, terraform.workspace)
   env_bucket_name = lookup(var.env_bucket_name, terraform.workspace)
 }
 
 module "s3_bucket" {
-  source          = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/s3_bucket/"
+  source          = "git::https://github.com/Gvrkprasad/remote_module.git//modules/s3_bucket/"
   environment     = lookup(var.environment, terraform.workspace)
   bucket_name     = lookup(var.bucket_name, terraform.workspace)
   env_bucket_name = lookup(var.env_bucket_name, terraform.workspace)
 }
 
 module "s3_sns_lamda" {
-  source = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/s3_sns_lamda/"
+  source = "git::https://github.com/Gvrkprasad/remote_module.git//modules/s3_sns_lamda/"
   environment = lookup(var.environment, terraform.workspace)
   bucket_name = lookup(var.bucket_name, terraform.workspace)
   sns_topic_name = var.sns_topic_name
@@ -88,7 +88,7 @@ module "s3_sns_lamda" {
 }
 
 module "sns" {
-  source          = "s3::https://s3.amazonaws.com/remote-module-optumbucket/modules/sns/"
+  source          = "git::https://github.com/Gvrkprasad/remote_module.git//modules/sns/"
   env_bucket_name = lookup(var.env_bucket_name, terraform.workspace)
   s3_env_bucket_arn = module.s3_bucket.s3_env_bucket_arn
   file_path = var.file_path
