@@ -9,7 +9,7 @@ terraform {
 
 provider "aws" {
   region = "ap-south-1"
-  profile = "glpsk370"
+ # profile = "glpsk370"
 }
 
 data "aws_key_pair" "ubuntu" {
