@@ -36,9 +36,9 @@ jobs:
               run: terraform validate
                         
             - name: Terraform Environment
-              run: terraform workspace new dev || true
+              run: terraform workspace new dev
             - name: Terraform Environment
-              run: terraform workspace new prod || true
+              run: terraform workspace new prod
             
             - name: Terraform Environment
               run: terraform workspace select dev
